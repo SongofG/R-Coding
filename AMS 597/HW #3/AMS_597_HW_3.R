@@ -129,40 +129,41 @@ detach(data)
 # Q5) Best Fitting Polynomial Regression Model.
 library(MASS)
 attach(mcycle)
-plot(times, accel)
-    # By plotting the data points, we can notice that
-    # there are roughly four inflection points.
-    # Therefore I am going to try degrees of 3, 4, and 5 to see what suits the best.
-    # Since all combinations of degree 3 and 4 are nested polynomial of degrees of 5,
-    # First we see the summary of each fits.
-summary(lm(accel ~ poly(times, degree = 3, raw = TRUE))) # Intercept, Beta1, Beta2, Beta3, all of them are significant
-summary(lm(accel ~ poly(times, degree = 4, raw = TRUE))) # Beta 2, 3, and 4 are not significant
-summary(lm(accel ~ poly(times, degree = 5, raw = TRUE))) # All the estimations are significant.
+bic <- NULL
+for (i in 1:30){
+  polyfit <- lm(accel~poly(times,i,raw=T))
+  bic[i] <- BIC(polyfit)
+}
+fit5=lm(accel~poly(times,which(bic==min(bic))[1],raw=T))
+summary(fit5)
+fit5a = step(fit5,k=log(133))
+#Selected the fitted model with has the smallest value of Bayesian information criterion
 
-    # Since degrees of 5 and 3 are good ones, we compare the two using anova test.
-anova(lm(accel ~ poly(times, degree = 3, raw = TRUE)), lm(accel ~ poly(times, degree = 5, raw = TRUE)))
-    # The result of this anova test gives us really small p-value.
-    # That means there is difference in the model of degrees of 3 and 5
-    # This means that degrees of 5 is better model!
-    # Therefore linear model with the degrees of 5 is the best fit.
-detach(mcycle)
-
-# 6)
-data = read.table(file = "http://www.ams.sunysb.edu/~pfkuan/Teaching/AMS597/Data/HW3Qn6Data.txt", header = TRUE)
-attach(data)
-indep_vars = names(data)[-1] # -1 for excluding y
+par(mfrow=c(2,2))
+plot(fit5)
+# From the top-left plot, the mean of residuals of the selected model is zero. As the fitted values along x increase, the residuals are approximately flat, so the disturbances are homoscedastic. The plot on the bottom-left also shows the homoscedasticity of residuals. The normal QQ plot in top-right indicates that the residuals are normally distributed. The residuals vs leverage plot in the bottom-right shows the spread is almost uniform and no point has excess leverage.
 
 
+# Q6)
+####Method 1
+mydat <-read.delim('http://www.ams.sunysb.edu/~pfkuan/Teaching/AMS597/Data/Qn1Data.txt',header=T)
+BIC.all <- NULL
+X <- mydat[,-1]
 
-
-
-
-
-
-
-
-
-
-
-
-
+BIC.all <- BIC(glm(mydat$y~1,family='binomial'))
+names(BIC.all) <- c('Intercept')
+for(i in 1:6){
+  tmp <- combn(6,i)
+  for(j in 1:dim(tmp)[2]){
+    subX <- X[,tmp[,j]]
+    subdat <- data.frame(cbind(mydat$y,subX))
+    colnames(subdat)[1] <- 'y'
+    BIC.all <- c(BIC.all,BIC(glm(y~.,data=subdat,family='binomial')))
+    names(BIC.all)[length(BIC.all)] <- paste('x',tmp[,j],collapse='',sep='')
+  }
+}
+BIC.all[which(BIC.all==min(BIC.all))]
+#> BIC.all[which(BIC.all==min(BIC.all))]
+#      x3 
+#266.9233
+# y~x3 is the best model using BIC
