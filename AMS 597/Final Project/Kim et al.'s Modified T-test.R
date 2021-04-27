@@ -1,5 +1,5 @@
 # Kim et al.'s Modified T-test
-modified.t.test <- function(x, y, alternative=c("two.sided", "greater", "equal"), mu=0, var.equal=F, conf.level=0.95){
+modified.t.test <- function(x, y, alternative=c("two.sided", "greater", "equal")){
   if(is.null(x) | is.null(y)){
     stop("Both of the input vectors should not be NULL")
   }
