@@ -9,6 +9,12 @@ weighted.z.test <- function(x, y, alternative=c("two.sided", "greater", "equal")
   else if(is.double(x) == F | is.double(y) == F){
     stop("Only double vectors are accepted")
   }
+  else if(length(x)==length(which(is.na(x))) | length(y)==length(which(is.na(y)))){
+    stop("The vector is consisted of all NAs.")
+  }
+  else if(length(x)==1 | length(y)==1){
+    stop("Test cannot be conducted due to the small size of sample")
+  }
   
   n1 <- length(which(!is.na(x)&!is.na(y))) # The number of complete matched pairs
   n2 <- length(which(!is.na(x)&is.na(y))) # The number of samples that are not NA in x but NA in y
