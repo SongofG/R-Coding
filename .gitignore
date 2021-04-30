@@ -31,5 +31,9 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+# R related files
+.Rdata
+.Rhistory
+
 # End of https://www.toptal.com/developers/gitignore/api/macos
 
