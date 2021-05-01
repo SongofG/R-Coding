@@ -32,7 +32,7 @@ ekbohm.test <- function(x, y, alternative="two.sided"){
   r <- STN1/(ST1*SN1)
   f_star <- n1*(n1+n3+n2*r)/((n1+n2)*(n1+n3) - n2*n3*r^2)
   g_star <- n1*(n1+n2+n3*r)/((n1+n2)*(n1+n3) - n2*n3*r^2)
-  Var_hat <- (ST1^2*(n1-1) + SN1^2(n1-1) + (1+r^2)*(ST^2*(n2-1) + SN^2(n3-1)))/(2*(n1-1) + (1+r^2)*(n2+n3-2))
+  Var_hat <- (ST1^2*(n1-1) + SN1^2*(n1-1) + (1+r^2)*(ST^2*(n2-1) + SN^2*(n3-1)))/(2*(n1-1) + (1+r^2)*(n2+n3-2))
   V_1_star <- Var_hat*((2*n1*(1-r) + (n2+n3)*(1-r^2))/((n1+n2)*(n1+n3) - n2*n3*r^2))
   
   Z_E <- (f_star*(mean(x[which(!is.na(x)&!is.na(y))]) - mean(x[which(!is.na(x))]))
@@ -53,7 +53,7 @@ ekbohm.test <- function(x, y, alternative="two.sided"){
     message <- "alternative hypothesis: true difference in means is not equal to 0"
   }
   
-  cat("       ", "Lin and Stiver's MLE Based Test Under Heteroscedasticity\n\n", "p-value =", p, "\n", message, "\n", "number of matched:", n1, "\n", "number of partially matched pairs:", n2+n3, "\n", "Test Statistic:", Z_E, "\n\n")
+  cat("       ", "Ekbohm's MLE Based Test Under Homoscedasticity\n\n", "p-value =", p, "\n", message, "\n", "number of matched:", n1, "\n", "number of partially matched pairs:", n2+n3, "\n", "Test Statistic:", Z_E, "\n\n")
   if(var.test(x,y)$p.value > 0.05){
     warning("F-test of the two vectors present a p-value greater than 0.05. This test is under unequal variance assumption.")
   }
