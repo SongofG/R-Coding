@@ -1,5 +1,5 @@
 # Kim et al.'s Modified T-test
-modified.t.test <- function(x, y, alternative=c("two.sided", "greater", "equal")){
+modified.t.test <- function(x, y, alternative="two.sided"){
   if(is.null(x) | is.null(y)){
     stop("Both of the input vectors should not be NULL")
   }
@@ -36,24 +36,17 @@ modified.t.test <- function(x, y, alternative=c("two.sided", "greater", "equal")
   
   if(alternative == "greater"){
     p <- pnorm(t3, lower.tail = F)
-    message <- "alternative hypothesis: true difference in means is greater than"
+    message <- "alternative hypothesis: true difference in means is greater than 0"
   }
   else if(alternative == "less"){
     p <- pnorm(t3)
-    message <- "alternative hypothesis: true difference in means is less than"
+    message <- "alternative hypothesis: true difference in means is less than 0"
   }
   else{
-    if(pnorm(t3) > 1/2){
-      p <- 2*pnorm(t3, lower.tail = F)
-    }
-    else{
-      p <- 2*pnorm(t3)
-    }
-    message <- "alternative hypothesis: true difference in means is not equal to"
+    p <- pnorm(abs(t3), lower.tail = F)
+    message <- "alternative hypothesis: true difference in means is not equal to 0"
   }
   
-  cat("       ", "Kim et al.'s Modified T-test\n\n", "p-value =", p, "\n", "alternative hypothesis:", message, mu, "\n", "number of matched:", n1, "\n", "number of partially matched pairs:", n2+n3, "\n", "Test Statistic:", t3, "\n\n")
-  result <- list(p.value = p, statistic = t3, D_bar = D_bar, T_bar = T_bar, N_bar = N_bar, sd.D = SD, sd.T = ST, sd.N = SN)
-  return(result)
+  cat("       ", "Kim et al.'s Modified T-test\n\n", "p-value =", p, "\n", "alternative hypothesis:", message, "\n", "number of matched:", n1, "\n", "number of partially matched pairs:", n2+n3, "\n", "Test Statistic:", t3, "\n\n")
   
 }
