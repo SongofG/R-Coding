@@ -19,6 +19,8 @@
 #' corrected.z.test(x, y)
 #' corrected.z.test(x, y, alternative = "greater")
 #' corrected.z.test(x, y, alternative = "less")
+#' 
+#' @export
 corrected.z.test <- function(x, y, alternative = "two.sided"){
   if(is.null(x) | is.null(y)){
     stop("Both of the input vectors should not be NULL")

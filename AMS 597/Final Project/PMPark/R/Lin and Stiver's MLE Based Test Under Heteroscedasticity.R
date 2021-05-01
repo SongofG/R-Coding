@@ -19,6 +19,8 @@
 #' lin.stiver.test(x, y)
 #' lin.stiver.test(x, y, alternative = "greater")
 #' lin.stiver.test(x, y, alternative = "less")
+#' 
+#' @export
 lin.stiver.test <- function(x, y, alternative="two.sided"){
   if(is.null(x) | is.null(y)){
     stop("Both of the input vectors should not be NULL")

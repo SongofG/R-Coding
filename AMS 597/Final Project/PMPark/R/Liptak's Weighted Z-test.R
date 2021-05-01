@@ -18,6 +18,8 @@
 #' weighted.z.test(x, y)
 #' weighted.z.test(x, y, alternative = "greater")
 #' weighted.z.test(x, y, alternative = "less")
+#' 
+#' @export
 weighted.z.test <- function(x, y, alternative="two.sided"){
   if(is.null(x) | is.null(y)){
     stop("Both of the input vectors should not be NULL")

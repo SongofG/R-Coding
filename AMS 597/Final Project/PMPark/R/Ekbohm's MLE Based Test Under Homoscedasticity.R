@@ -19,6 +19,8 @@
 #' ekbohm.test(x, y)
 #' ekbohm.test(x, y, alternative = "greater")
 #' ekbohm.test(x, y, alternative = "less")
+#' 
+#' @export
 ekbohm.test <- function(x, y, alternative="two.sided"){
   if(is.null(x) | is.null(y)){
     stop("Both of the input vectors should not be NULL")
