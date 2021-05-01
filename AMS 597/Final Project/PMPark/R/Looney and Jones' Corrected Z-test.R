@@ -1,5 +1,5 @@
 # Looney and Jones' Corrected Z-test
-corrected.z.test <- function(x, y, alternative = c("two.sided", "greater", "less")){
+corrected.z.test <- function(x, y, alternative = "two.sided"){
   if(is.null(x) | is.null(y)){
     stop("Both of the input vectors should not be NULL")
   }
