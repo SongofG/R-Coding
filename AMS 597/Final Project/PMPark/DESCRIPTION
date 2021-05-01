@@ -1,7 +1,8 @@
 Package: PMPark
-Version: 0.1
+Version: 0.2
 Date: 2021-05-01
 Title: AMS 597 Final Project
 Description: Implemetation of Methods for Partially Matched Samples Using the P-value Pooling Approach.
 Author: Haein Park <haein.park@stonybrook.edu>
 Maintainer: Haein Park <haein.park@stonybrook.edu>
+RoxygenNote: 7.1.1
