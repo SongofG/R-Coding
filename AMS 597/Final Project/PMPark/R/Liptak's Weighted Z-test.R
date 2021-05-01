@@ -1,5 +1,24 @@
-# Liptak's Weighted Z-test
-weighted.z.test <- function(x, y, alternative="two.sided", var.equal=F){
+#' Liptak's Weighted Z-test
+#' 
+#' Performs Liptak's Weighted Z-test on a partially matched sample in a form of R vector.
+#' 
+#' @param x a (non-empty) numeric vector of data values with some missing value(NA).
+#' @param y a (non-empty) numeric vector of data values with some missing value(NA).
+#' @param alternative a character string specifying the alternative hypothesis, must be one of "two.sided" (default), "greater" or "less".
+#' 
+#' @return Results of test including p-value will be printed.
+#' 
+#' @examples 
+#' # Generating Toy Examples
+#' set.seed(123)
+#' x <- rnorm(20)
+#' x[sample(1:20, 3)] <- NA # Deliverately generating some missing values
+#' y <- (rnorm(20) + 1)/3
+#' y[sample(which(!is.na(x)), 4)]
+#' weighted.z.test(x, y)
+#' weighted.z.test(x, y, alternative = "greater")
+#' weighted.z.test(x, y, alternative = "less")
+weighted.z.test <- function(x, y, alternative="two.sided"){
   if(is.null(x) | is.null(y)){
     stop("Both of the input vectors should not be NULL")
   }
@@ -45,7 +64,7 @@ weighted.z.test <- function(x, y, alternative="two.sided", var.equal=F){
     p <- 1 - pnorm((w1*Z1 + w2*Z2)/sqrt(w1^2 + w2^2))
     message <- "alternative hypothesis: true difference in means is less than 0"
   }
-  else{
+  else if(alternative == "two.sided"){
     p1 <- t.test(x[which(!is.na(x)&!is.na(y))], y[which(!is.na(x)&!is.na(y))], alternative = "greater", paired = T, var.equal=equal)$p.value
     p2 <- t.test(x[which(!is.na(x)&is.na(y))], y[which(is.na(x)&!is.na(y))], alternative = "greater", paired = F, var.equal=equal)$p.value
     Z1 <- qnorm(1-p1)
@@ -58,6 +77,9 @@ weighted.z.test <- function(x, y, alternative="two.sided", var.equal=F){
       p <- 2*(1-p)
     }
     message <- "alternative hypothesis: true difference in means is not equal to 0"
+  }
+  else{
+    stop('alternative must be "greater", "less", or "two.sided".')
   }
   
   cat("       ", "Liptak's Weighted Z-test\n\n", "p-value =", p, "\n", "alternative hypothesis:", message, "\n", "number of matched:", n1, "\n", "number of partially matched pairs:", n2+n3, "\n", "weight of matched pairs:", w1, "\n", "weight of partially matched pairs", w2, "\n", "Z score of matched pairs:", Z1, "\n", "Z score of partially matched pairs:", Z2, "\n")

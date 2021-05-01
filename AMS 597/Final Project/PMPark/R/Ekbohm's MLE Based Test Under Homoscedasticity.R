@@ -1,4 +1,24 @@
-# Ekbohm's MLE Based Test Under Homoscedasticity
+#' Ekbohm's MLE Based Test Under Homoscedasticity
+#' 
+#' Performs Ekbohm's MLE Based Test Under Homoscedasticity on a partially matched sample in a form of R vector.
+#' This test is under the assumption of equal variance of the two input vectors. By F-test, if the two vectors are considered to have different variances, a warning message will be shown with the result.
+#' 
+#' @param x a (non-empty) numeric vector of data values with some missing value(NA).
+#' @param y a (non-empty) numeric vector of data values with some missing value(NA).
+#' @param alternative a character string specifying the alternative hypothesis, must be one of "two.sided" (default), "greater" or "less".
+#' 
+#' @return Results of test including p-value will be printed.
+#' 
+#' @examples 
+#' # Generating Toy Examples
+#' set.seed(123)
+#' x <- rnorm(20)
+#' x[sample(1:20, 3)] <- NA # Deliverately generating some missing values
+#' y <- (rnorm(20) + 1)/3
+#' y[sample(which(!is.na(x)), 4)]
+#' ekbohm.test(x, y)
+#' ekbohm.test(x, y, alternative = "greater")
+#' ekbohm.test(x, y, alternative = "less")
 ekbohm.test <- function(x, y, alternative="two.sided"){
   if(is.null(x) | is.null(y)){
     stop("Both of the input vectors should not be NULL")
