@@ -43,8 +43,18 @@ lin.stiver.test <- function(x, y, alternative="two.sided"){
   n2 <- length(which(!is.na(x)&is.na(y))) # The number of samples that are not NA in x but NA in y
   n3 <- length(which(is.na(x)&!is.na(y))) # The number of samples that are NA in x but not in y
   
-  if(n1 == 0 | n2 ==0 | n3 == 0){
-    stop("Given vectors do not meet the testing condition: either n1, n2, or n3 is 0.")
+  # n1, n2, n3 case control.
+  if(n1 == 0){ # No paired data
+    warning("Since there are no paired data, the test will automatically become two sample t-test.")
+    return(t.test(x,y,alternative = alternative, var.equal = equal))
+  }
+  else if(n2==0 & n3==0){ # all paired data
+    warning("Since there is no missing value from all the paired data in the sample, the test will automatically become paired two sample t-test.")
+    return(t.test(x,y,alternative = alternative, paired = T, var.equal = equal))
+  }
+  else if((n2==0 & n3!=0) | (n2!=0 & n3==0)){
+    warning("Since there are missing values from only one input vector, the test will automatically become two sample t-test")
+    return(t.test(x,y,alternative = alternative, var.equal = equal))
   }
   
   STN1 <- cov(x[which(!is.na(x)&!is.na(y))], y[which(!is.na(x)&!is.na(y))])

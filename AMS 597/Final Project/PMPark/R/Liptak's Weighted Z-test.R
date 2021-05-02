@@ -36,22 +36,34 @@ weighted.z.test <- function(x, y, alternative="two.sided"){
     stop("Test cannot be conducted due to the small size of sample")
   }
   
-  if(var.test(x,y)$p.value <= 0.05){
-    equal = F
-  }
-  else{
+  equal = F
+  if(var.test(x,y)$p.value > 0.05){
     equal = T
   }
-  
   n1 <- length(which(!is.na(x)&!is.na(y))) # The number of complete matched pairs
   n2 <- length(which(!is.na(x)&is.na(y))) # The number of samples that are not NA in x but NA in y
   n3 <- length(which(is.na(x)&!is.na(y))) # The number of samples that are NA in x but not in y
-  w1 <- sqrt(n1) # weight of the complete matched pairs
+  
+  # n1, n2, n3 case control.
+  if(n1 == 0){ # No paired data
+    warning("Since there are no paired data, the test will automatically become two sample t-test.")
+    return(t.test(x,y,alternative = alternative, var.equal = equal))
+  }
+  else if(n2==0 & n3==0){ # all paired data
+    warning("Since there is no missing value from all the paired data in the sample, the test will automatically become paired two sample t-test.")
+    return(t.test(x,y,alternative = alternative, paired = T, var.equal = equal))
+  }
+  else if((n2==0 & n3!=0) | (n2!=0 & n3==0)){
+    warning("Since there are missing values from only one input vector, the test will automatically become two sample t-test")
+    return(t.test(x,y,alternative = alternative, var.equal = equal))
+  }
+  
+  w1 <- sqrt(2*n1) # weight of the complete matched pairs
   w2 <- sqrt(n2+n3) # weight of the partially matched pairs
   
   if (alternative == "greater"){
     p1 <- t.test(x[which(!is.na(x)&!is.na(y))], y[which(!is.na(x)&!is.na(y))], alternative = "greater", paired = T, var.equal=equal)$p.value
-    p2 <- t.test(x[which(!is.na(x)&is.na(y))], y[which(is.na(x)&!is.na(y))], alternative = "greater", paired = F, var.equal=equal)$p.value
+    p2 <- t.test(x[which(!is.na(x)&is.na(y))], y[which(is.na(x)&!is.na(y))], alternative = "greater", var.equal=equal)$p.value
     Z1 <- qnorm(1-p1)
     Z2 <- qnorm(1-p2)
     p <- 1 - pnorm((w1*Z1 + w2*Z2)/sqrt(w1^2 + w2^2))
@@ -59,7 +71,7 @@ weighted.z.test <- function(x, y, alternative="two.sided"){
   }
   else if (alternative == "less"){
     p1 <- t.test(x[which(!is.na(x)&!is.na(y))], y[which(!is.na(x)&!is.na(y))], alternative = "less", paired = T, var.equal=equal)$p.value
-    p2 <- t.test(x[which(!is.na(x)&is.na(y))], y[which(is.na(x)&!is.na(y))], alternative = "less", paired = F, var.equal=equal)$p.value
+    p2 <- t.test(x[which(!is.na(x)&is.na(y))], y[which(is.na(x)&!is.na(y))], alternative = "less", var.equal=equal)$p.value
     Z1 <- qnorm(1-p1)
     Z2 <- qnorm(1-p2)
     p <- 1 - pnorm((w1*Z1 + w2*Z2)/sqrt(w1^2 + w2^2))
@@ -67,7 +79,7 @@ weighted.z.test <- function(x, y, alternative="two.sided"){
   }
   else if(alternative == "two.sided"){
     p1 <- t.test(x[which(!is.na(x)&!is.na(y))], y[which(!is.na(x)&!is.na(y))], alternative = "greater", paired = T, var.equal=equal)$p.value
-    p2 <- t.test(x[which(!is.na(x)&is.na(y))], y[which(is.na(x)&!is.na(y))], alternative = "greater", paired = F, var.equal=equal)$p.value
+    p2 <- t.test(x[which(!is.na(x)&is.na(y))], y[which(is.na(x)&!is.na(y))], alternative = "greater", var.equal=equal)$p.value
     Z1 <- qnorm(1-p1)
     Z2 <- qnorm(1-p2)
     p <- 1 - pnorm((w1*Z1 + w2*Z2)/sqrt(w1^2 + w2^2))
