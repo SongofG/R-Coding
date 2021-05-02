@@ -15,7 +15,7 @@
 #' x <- rnorm(20)
 #' x[sample(1:20, 3)] <- NA # Deliverately generating some missing values
 #' y <- (rnorm(20) + 1)/3
-#' y[sample(which(!is.na(x)), 4)]
+#' y[sample(which(!is.na(x)), 4)] <- NA
 #' corrected.z.test(x, y)
 #' corrected.z.test(x, y, alternative = "greater")
 #' corrected.z.test(x, y, alternative = "less")

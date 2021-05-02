@@ -27,7 +27,7 @@ set.seed(123)
 x <- rnorm(20)
 x[sample(1:20, 3)] <- NA # Deliverately generating some missing values
 y <- (rnorm(20) + 1)/3
-y[sample(which(!is.na(x)), 4)]
+y[sample(which(!is.na(x)), 4)] <- NA
 ekbohm.test(x, y)
 ekbohm.test(x, y, alternative = "greater")
 ekbohm.test(x, y, alternative = "less")

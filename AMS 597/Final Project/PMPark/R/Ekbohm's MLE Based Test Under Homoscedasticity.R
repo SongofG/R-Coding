@@ -15,7 +15,7 @@
 #' x <- rnorm(20)
 #' x[sample(1:20, 3)] <- NA # Deliverately generating some missing values
 #' y <- (rnorm(20) + 1)/3
-#' y[sample(which(!is.na(x)), 4)]
+#' y[sample(which(!is.na(x)), 4)] <- NA
 #' ekbohm.test(x, y)
 #' ekbohm.test(x, y, alternative = "greater")
 #' ekbohm.test(x, y, alternative = "less")
@@ -49,18 +49,18 @@ ekbohm.test <- function(x, y, alternative="two.sided"){
   STN1 <- cov(x[which(!is.na(x)&!is.na(y))], y[which(!is.na(x)&!is.na(y))])
   ST1 <- sd(x[which(!is.na(x)&!is.na(y))])
   SN1 <- sd(y[which(!is.na(x)&!is.na(y))])
-  ST <- sd(x[which(!is.na(x))])
-  SN <- sd(y[which(!is.na(y))])
+  ST <- sd(x[which(!is.na(x)&is.na(y))])
+  SN <- sd(y[which(!is.na(y)&is.na(x))])
   r <- STN1/(ST1*SN1)
   f_star <- n1*(n1+n3+n2*r)/((n1+n2)*(n1+n3) - n2*n3*r^2)
   g_star <- n1*(n1+n2+n3*r)/((n1+n2)*(n1+n3) - n2*n3*r^2)
   Var_hat <- (ST1^2*(n1-1) + SN1^2*(n1-1) + (1+r^2)*(ST^2*(n2-1) + SN^2*(n3-1)))/(2*(n1-1) + (1+r^2)*(n2+n3-2))
   V_1_star <- Var_hat*((2*n1*(1-r) + (n2+n3)*(1-r^2))/((n1+n2)*(n1+n3) - n2*n3*r^2))
   
-  Z_E <- (f_star*(mean(x[which(!is.na(x)&!is.na(y))]) - mean(x[which(!is.na(x))]))
-          - g_star*(mean(y[which(!is.na(x)&!is.na(y))]) - mean(y[which(!is.na(y))]))
-          + mean(x[which(!is.na(x))])
-          - mean(y[which(!is.na(y))]))/sqrt(V_1_star)
+  Z_E <- (f_star*(mean(x[which(!is.na(x)&!is.na(y))]) - mean(x[which(!is.na(x)&is.na(y))]))
+          - g_star*(mean(y[which(!is.na(x)&!is.na(y))]) - mean(y[which(!is.na(y)&is.na(x))]))
+          + mean(x[which(!is.na(x)&is.na(y))])
+          - mean(y[which(!is.na(y)&is.na(x))]))/sqrt(V_1_star)
   
   if(alternative == "greater"){
     p <- pt(Z_E, n1, lower.tail = F)

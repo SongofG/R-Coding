@@ -27,7 +27,7 @@ set.seed(123)
 x <- rnorm(20)
 x[sample(1:20, 3)] <- NA # Deliverately generating some missing values
 y <- (rnorm(20) + 1)/3
-y[sample(which(!is.na(x)), 4)]
+y[sample(which(!is.na(x)), 4)] <- NA
 lin.stiver.test(x, y)
 lin.stiver.test(x, y, alternative = "greater")
 lin.stiver.test(x, y, alternative = "less")

@@ -15,12 +15,13 @@
 #' x <- rnorm(20)
 #' x[sample(1:20, 3)] <- NA # Deliverately generating some missing values
 #' y <- (rnorm(20) + 1)/3
-#' y[sample(which(!is.na(x)), 4)]
+#' y[sample(which(!is.na(x)), 4)] <- NA
 #' lin.stiver.test(x, y)
 #' lin.stiver.test(x, y, alternative = "greater")
 #' lin.stiver.test(x, y, alternative = "less")
 #' 
 #' @export
+
 lin.stiver.test <- function(x, y, alternative="two.sided"){
   if(is.null(x) | is.null(y)){
     stop("Both of the input vectors should not be NULL")
@@ -54,9 +55,9 @@ lin.stiver.test <- function(x, y, alternative="two.sided"){
   g <- (n1*(n1+n2+n3*(STN1/SN1^2)))/((n1+n2)*(n1+n3) - n2*n3*r^2)
   V_1 <- ((f^2/n1 + (1-f)^2/n2)*ST1^2*(n1-1) + (g^2/n1 + (1-g)^2/n3)*SN1^2*(n1-1) - 2*f*g*STN1*(n1-1)/n1)/(n1-1)
   
-  Z_LS <- (f*(mean(x[which(!is.na(x) & !is.na(y))]) - mean(x[which(!is.na(x))]))
-           - g*(mean(y[which(!is.na(x) & !is.na(y))]) - mean(y[which(!is.na(y))]))
-           + mean(x[which(!is.na(x))]) - mean(y[which(!is.na(y))]))/sqrt(V_1)
+  Z_LS <- (f*(mean(x[which(!is.na(x) & !is.na(y))]) - mean(x[which(!is.na(x)&is.na(y))]))
+           - g*(mean(y[which(!is.na(x) & !is.na(y))]) - mean(y[which(!is.na(y)&is.na(x))]))
+           + mean(x[which(!is.na(x)&is.na(y))]) - mean(y[which(!is.na(y)&is.na(x))]))/sqrt(V_1)
   
   if(alternative == "greater"){
     p <- pt(Z_LS, n1, lower.tail = F)
@@ -75,5 +76,5 @@ lin.stiver.test <- function(x, y, alternative="two.sided"){
   if(var.test(x,y)$p.value <= 0.05){
     warning("F-test of the two vectors present a p-value less than 0.05. This test is under the equal variance assumption.")
   }
-  
 }
+

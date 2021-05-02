@@ -14,11 +14,10 @@
 #' x <- rnorm(20)
 #' x[sample(1:20, 3)] <- NA # Deliverately generating some missing values
 #' y <- (rnorm(20) + 1)/3
-#' y[sample(which(!is.na(x)), 4)]
+#' y[sample(which(!is.na(x)), 4)] <- NA
 #' weighted.z.test(x, y)
 #' weighted.z.test(x, y, alternative = "greater")
 #' weighted.z.test(x, y, alternative = "less")
-#' 
 #' @export
 weighted.z.test <- function(x, y, alternative="two.sided"){
   if(is.null(x) | is.null(y)){
