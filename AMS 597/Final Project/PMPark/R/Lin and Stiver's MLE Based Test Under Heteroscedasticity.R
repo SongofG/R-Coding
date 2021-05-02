@@ -38,6 +38,9 @@ lin.stiver.test <- function(x, y, alternative="two.sided"){
   else if(length(x)==1 | length(y)==1){
     stop("Test cannot be conducted due to the small size of sample")
   }
+  else if(alternative != "two.sided" | alternative != "greater" | alternative != "less"){
+    stop("Argument 'alternative' should be one of 'two.sided', 'greater', or 'less'.")
+  }
   
   n1 <- length(which(!is.na(x)&!is.na(y))) # The number of complete matched pairs
   n2 <- length(which(!is.na(x)&is.na(y))) # The number of samples that are not NA in x but NA in y

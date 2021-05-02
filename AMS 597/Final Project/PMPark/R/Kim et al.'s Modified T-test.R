@@ -36,6 +36,9 @@ modified.t.test <- function(x, y, alternative="two.sided"){
   else if(length(x)==1 | length(y)==1){
     stop("Test cannot be conducted due to the small size of sample")
   }
+  else if(alternative != "two.sided" | alternative != "greater" | alternative != "less"){
+    stop("Argument 'alternative' should be one of 'two.sided', 'greater', or 'less'.")
+  }
   
   equal = F
   if(var.test(x,y)$p.value > 0.05){

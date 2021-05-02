@@ -35,6 +35,9 @@ weighted.z.test <- function(x, y, alternative="two.sided"){
   else if(length(x)==1 | length(y)==1){
     stop("Test cannot be conducted due to the small size of sample")
   }
+  else if(alternative != "two.sided" | alternative != "greater" | alternative != "less"){
+    stop("Argument 'alternative' should be one of 'two.sided', 'greater', or 'less'.")
+  }
   
   equal = F
   if(var.test(x,y)$p.value > 0.05){
@@ -77,7 +80,7 @@ weighted.z.test <- function(x, y, alternative="two.sided"){
     p <- 1 - pnorm((w1*Z1 + w2*Z2)/sqrt(w1^2 + w2^2))
     message <- "alternative hypothesis: true difference in means is less than 0"
   }
-  else if(alternative == "two.sided"){
+  else{
     p1 <- t.test(x[which(!is.na(x)&!is.na(y))], y[which(!is.na(x)&!is.na(y))], alternative = "greater", paired = T, var.equal=equal)$p.value
     p2 <- t.test(x[which(!is.na(x)&is.na(y))], y[which(is.na(x)&!is.na(y))], alternative = "greater", var.equal=equal)$p.value
     Z1 <- qnorm(1-p1)
@@ -90,9 +93,6 @@ weighted.z.test <- function(x, y, alternative="two.sided"){
       p <- 2*(1-p)
     }
     message <- "alternative hypothesis: true difference in means is not equal to 0"
-  }
-  else{
-    stop('alternative must be "greater", "less", or "two.sided".')
   }
   
   cat("       ", "Liptak's Weighted Z-test\n\n", "p-value =", p, "\n", "alternative hypothesis:", message, "\n", "number of matched:", n1, "\n", "number of partially matched pairs:", n2+n3, "\n", "weight of matched pairs:", w1, "\n", "weight of partially matched pairs", w2, "\n", "Z score of matched pairs:", Z1, "\n", "Z score of partially matched pairs:", Z2, "\n")
