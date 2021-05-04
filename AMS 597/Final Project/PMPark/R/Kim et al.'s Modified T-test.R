@@ -36,7 +36,7 @@ modified.t.test <- function(x, y, alternative="two.sided"){
   else if(length(x)==1 | length(y)==1){
     stop("Test cannot be conducted due to the small size of sample")
   }
-  else if(alternative != "two.sided" | alternative != "greater" | alternative != "less"){
+  else if(alternative != "two.sided" & alternative != "greater" & alternative != "less"){
     stop("Argument 'alternative' should be one of 'two.sided', 'greater', or 'less'.")
   }
   
@@ -85,10 +85,10 @@ modified.t.test <- function(x, y, alternative="two.sided"){
     message <- "alternative hypothesis: true difference in means is less than 0"
   }
   else{
-    p <- pnorm(abs(t3), lower.tail = F)
+    p <- 2*pnorm(abs(t3), lower.tail = F)
     message <- "alternative hypothesis: true difference in means is not equal to 0"
   }
   
-  cat("       ", "Kim et al.'s Modified T-test\n\n", "p-value =", p, "\n", "alternative hypothesis:", message, "\n", "number of matched:", n1, "\n", "number of partially matched pairs:", n2+n3, "\n", "Test Statistic:", t3, "\n\n")
+  cat("       ", "Kim et al.'s Modified T-test\n\n", "p-value =", p, "\n", message, "\n", "number of matched:", n1, "\n", "number of partially matched pairs:", n2+n3, "\n", "Test Statistic:", t3, "\n\n")
   
 }

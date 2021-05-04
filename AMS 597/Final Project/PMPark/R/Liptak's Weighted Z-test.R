@@ -35,7 +35,7 @@ weighted.z.test <- function(x, y, alternative="two.sided"){
   else if(length(x)==1 | length(y)==1){
     stop("Test cannot be conducted due to the small size of sample")
   }
-  else if(alternative != "two.sided" | alternative != "greater" | alternative != "less"){
+  else if(alternative != "two.sided" & alternative != "greater" & alternative != "less"){
     stop("Argument 'alternative' should be one of 'two.sided', 'greater', or 'less'.")
   }
   
@@ -69,7 +69,7 @@ weighted.z.test <- function(x, y, alternative="two.sided"){
     p2 <- t.test(x[which(!is.na(x)&is.na(y))], y[which(is.na(x)&!is.na(y))], alternative = "greater", var.equal=equal)$p.value
     Z1 <- qnorm(1-p1)
     Z2 <- qnorm(1-p2)
-    p <- 1 - pnorm((w1*Z1 + w2*Z2)/sqrt(w1^2 + w2^2))
+    p <- pnorm((w1*Z1 + w2*Z2)/sqrt(w1^2 + w2^2), lower.tail = F)
     message <- "alternative hypothesis: true difference in means is greater than 0"
   }
   else if (alternative == "less"){
@@ -77,7 +77,7 @@ weighted.z.test <- function(x, y, alternative="two.sided"){
     p2 <- t.test(x[which(!is.na(x)&is.na(y))], y[which(is.na(x)&!is.na(y))], alternative = "less", var.equal=equal)$p.value
     Z1 <- qnorm(1-p1)
     Z2 <- qnorm(1-p2)
-    p <- 1 - pnorm((w1*Z1 + w2*Z2)/sqrt(w1^2 + w2^2))
+    p <- pnorm((w1*Z1 + w2*Z2)/sqrt(w1^2 + w2^2))
     message <- "alternative hypothesis: true difference in means is less than 0"
   }
   else{
@@ -85,7 +85,7 @@ weighted.z.test <- function(x, y, alternative="two.sided"){
     p2 <- t.test(x[which(!is.na(x)&is.na(y))], y[which(is.na(x)&!is.na(y))], alternative = "greater", var.equal=equal)$p.value
     Z1 <- qnorm(1-p1)
     Z2 <- qnorm(1-p2)
-    p <- 1 - pnorm((w1*Z1 + w2*Z2)/sqrt(w1^2 + w2^2))
+    p <- pnorm((w1*Z1 + w2*Z2)/sqrt(w1^2 + w2^2))
     if (p < 0.5){
       p <- 2*p
     }
@@ -95,5 +95,5 @@ weighted.z.test <- function(x, y, alternative="two.sided"){
     message <- "alternative hypothesis: true difference in means is not equal to 0"
   }
   
-  cat("       ", "Liptak's Weighted Z-test\n\n", "p-value =", p, "\n", "alternative hypothesis:", message, "\n", "number of matched:", n1, "\n", "number of partially matched pairs:", n2+n3, "\n", "weight of matched pairs:", w1, "\n", "weight of partially matched pairs", w2, "\n", "Z score of matched pairs:", Z1, "\n", "Z score of partially matched pairs:", Z2, "\n")
+  cat("       ", "Liptak's Weighted Z-test\n\n", "p-value =", p, "\n", message, "\n", "number of matched:", n1, "\n", "number of partially matched pairs:", n2+n3, "\n", "weight of matched pairs:", w1, "\n", "weight of partially matched pairs", w2, "\n", "Z score of matched pairs:", Z1, "\n", "Z score of partially matched pairs:", Z2, "\n")
 }

@@ -37,7 +37,7 @@ corrected.z.test <- function(x, y, alternative = "two.sided"){
   else if(length(x)==1 | length(y)==1){
     stop("Test cannot be conducted due to the small size of sample")
   }
-  else if(alternative != "two.sided" | alternative != "greater" | alternative != "less"){
+  else if(alternative != "two.sided" & alternative != "greater" & alternative != "less"){
     stop("Argument 'alternative' should be one of 'two.sided', 'greater', or 'less'.")
   }
   
